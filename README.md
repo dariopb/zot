@@ -148,7 +148,7 @@ $ZOT_HOME/
 └── logs/               # app log files
 ```
 
-Drop a `SYSTEM.md` in `$ZOT_HOME` to replace the built-in identity and guidelines for every run. `--system-prompt` still wins per-invocation. Delete the file to revert to the default.
+Drop a `SYSTEM.md` in `$ZOT_HOME` to replace the built-in identity and zot-docs guidance for every run. `--system-prompt` still wins per-invocation. Custom prompts still receive appended instructions and generated context, including `AGENTS.md`, skills, auto-swarm guidance when enabled, and the date/cwd footer. Delete the file to revert to the default.
 
 ### HTTP proxy
 
@@ -185,9 +185,9 @@ Treat questions and discussions as requests for explanation. Do not edit files o
 |---|---|---|
 | `$ZOT_HOME/AGENTS.md` | global, every run | appended to the default prompt |
 | `./AGENTS.md` (and parent dirs) | project | appended to the default prompt |
-| `$ZOT_HOME/SYSTEM.md` | global, every run | replaces the default prompt entirely |
+| `$ZOT_HOME/SYSTEM.md` | global, every run | replaces the built-in identity and zot-docs guidance |
 | `--append-system-prompt <text>` | single run | appends for one invocation (repeatable) |
-| `--system-prompt <text>` | single run | replaces the prompt for one invocation |
+| `--system-prompt <text>` | single run | replaces the built-in identity and zot-docs guidance |
 
 > **Note:** zot does not read a `CLAUDE.md` instruction file. The only Claude-compatible thing it picks up is skills under `.claude/skills/`. If you are migrating from Claude Code, move that content into `AGENTS.md` (global or per-project) and zot will use it.
 

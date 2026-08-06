@@ -599,7 +599,10 @@ func Resolve(args Args, requireCred bool) (Resolved, error) {
 
 	summaries := toolSummaries(reg, args)
 
-	contextFiles := loadAgentsContext(args.CWD, ZotHome())
+	var contextFiles []ContextFile
+	if !args.NoContextFiles {
+		contextFiles = loadAgentsContext(args.CWD, ZotHome())
+	}
 	append_ := append([]string(nil), args.AppendSystemPrompt...)
 	if agentsAddendum := formatAgentsContext(contextFiles); agentsAddendum != "" {
 		append_ = append(append_, agentsAddendum)

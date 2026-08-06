@@ -389,11 +389,8 @@ func runPrintMode(ctx context.Context, args Args, version string) error {
 	sess, _ := openOrCreateSession(args, r, ag, version)
 	defer sess.Close()
 
-	prompt := args.Prompt
-	if prompt == "" {
-		piped, _ := readAllStdin()
-		prompt = strings.TrimSpace(piped)
-	}
+	piped, _ := readAllStdin()
+	prompt := combinePromptInput(piped, args.Prompt)
 	if prompt == "" {
 		return fmt.Errorf("print mode requires a prompt (arg or stdin)")
 	}
@@ -432,11 +429,8 @@ func runStreamMode(ctx context.Context, args Args, version string) error {
 	sess, _ := openOrCreateSession(args, r, ag, version)
 	defer sess.Close()
 
-	prompt := args.Prompt
-	if prompt == "" {
-		piped, _ := readAllStdin()
-		prompt = strings.TrimSpace(piped)
-	}
+	piped, _ := readAllStdin()
+	prompt := combinePromptInput(piped, args.Prompt)
 	if prompt == "" {
 		return fmt.Errorf("stream mode requires a prompt (arg or stdin)")
 	}
@@ -514,11 +508,8 @@ func runJSONMode(ctx context.Context, args Args, version string) error {
 	sess, _ := openOrCreateSession(args, r, ag, version)
 	defer sess.Close()
 
-	prompt := args.Prompt
-	if prompt == "" {
-		piped, _ := readAllStdin()
-		prompt = strings.TrimSpace(piped)
-	}
+	piped, _ := readAllStdin()
+	prompt := combinePromptInput(piped, args.Prompt)
 	if prompt == "" {
 		return fmt.Errorf("json mode requires a prompt (arg or stdin)")
 	}
@@ -1578,6 +1569,17 @@ func writeNewTranscriptLocked(ag *core.Agent, sess *core.Session, from int) {
 	}
 	cum := ag.Cost()
 	_ = sess.AppendUsage(cum, cum)
+}
+
+func combinePromptInput(stdin, positional string) string {
+	parts := make([]string, 0, 2)
+	if stdin = strings.TrimSpace(stdin); stdin != "" {
+		parts = append(parts, stdin)
+	}
+	if positional = strings.TrimSpace(positional); positional != "" {
+		parts = append(parts, positional)
+	}
+	return strings.Join(parts, "\n")
 }
 
 func readAllStdin() (string, error) {

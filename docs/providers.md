@@ -4,6 +4,20 @@ zot ships with built-in providers and a model catalog. You can select models
 with `/model`, list them with `zot --list-models`, and add private models in
 `$ZOT_HOME/models.json`.
 
+## HTTP proxy
+
+Set one global proxy for zot-managed HTTP and HTTPS traffic with the `http_proxy` key in `$ZOT_HOME/config.json`:
+
+```json
+{
+  "http_proxy": "http://127.0.0.1:7890"
+}
+```
+
+zot applies this setting at startup. Existing `HTTP_PROXY`, `HTTPS_PROXY`, `http_proxy`, and `https_proxy` environment variables take precedence for their corresponding protocol. Standard `NO_PROXY` and `no_proxy` bypass lists remain effective. Restart zot after changing the setting.
+
+`config.json` is not a credential store. If the proxy URL contains a username or password, prefer setting the proxy environment variables in a protected shell or service configuration rather than saving those credentials in `config.json`.
+
 ## Login methods
 
 Use `/login` in interactive mode. Type in either provider picker to filter the list by provider ID or display name.

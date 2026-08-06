@@ -150,6 +150,18 @@ $ZOT_HOME/
 
 Drop a `SYSTEM.md` in `$ZOT_HOME` to replace the built-in identity and guidelines for every run. `--system-prompt` still wins per-invocation. Delete the file to revert to the default.
 
+### HTTP proxy
+
+To route zot-managed HTTP and HTTPS requests through one proxy, add `http_proxy` to `$ZOT_HOME/config.json`:
+
+```json
+{
+  "http_proxy": "http://127.0.0.1:7890"
+}
+```
+
+The setting is applied at startup to both HTTP and HTTPS traffic. Existing `HTTP_PROXY`, `HTTPS_PROXY`, `http_proxy`, and `https_proxy` environment variables take precedence for their corresponding protocol. `NO_PROXY` and `no_proxy` continue to control bypasses. Restart zot after changing the config file. If the URL contains proxy credentials, prefer protected environment variables because `config.json` is not a credential store.
+
 ## Persistent instructions (AGENTS.md)
 
 Use `AGENTS.md` to give zot standing instructions that layer **on top of** the default system prompt, without replacing it. This is the friendliest way to shape behavior (for example, taming local models that jump straight to code edits) because it adds guidance rather than taking over the base identity the way `SYSTEM.md` does.

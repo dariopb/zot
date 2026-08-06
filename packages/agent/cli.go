@@ -193,6 +193,10 @@ func fanoutAgentEvent(mgr *extensions.Manager, ev core.AgentEvent) {
 
 // Run is the top-level entrypoint for the zot binary.
 func Run(rawArgs []string, version string) error {
+	// Apply network configuration before any subcommand can make an HTTP
+	// request. Standard proxy environment variables retain precedence.
+	applyConfiguredHTTPProxy()
+
 	// Subcommand router: `zot bot ...` is handled separately so the
 	// generic flag parser doesn't reject "bot" as a positional arg.
 	if handled, err := runBotCommand(rawArgs, version); handled {

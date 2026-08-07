@@ -257,6 +257,11 @@ func (c *openaiClient) buildRequest(req Request) (*oaiRequest, error) {
 			// don't clamp zot's "maximum" to "high" for those models.
 			effort = OpenAICompatAnthropicEffort(reasoning)
 		}
+		if hasReasoningLevelOverride(m, req.Reasoning) {
+			// Explicit model mappings describe the endpoint's actual effort
+			// values and take precedence over conservative protocol defaults.
+			effort = reasoning
+		}
 		if effort != "" {
 			out.ReasoningEffort = effort
 		}

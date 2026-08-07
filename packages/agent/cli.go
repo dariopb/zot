@@ -222,6 +222,9 @@ func runWithArgsRaw(rawArgs []string, version string) error {
 		rawArgs = append([]string{"--rpc"}, rawArgs[1:]...)
 	}
 
+	if fi, err := os.Stdin.Stat(); err == nil {
+		rawArgs = argsForStdin(rawArgs, fi.Mode())
+	}
 	args, err := ParseArgs(rawArgs)
 	if err != nil {
 		PrintHelp(version)
@@ -1569,6 +1572,13 @@ func writeNewTranscriptLocked(ag *core.Agent, sess *core.Session, from int) {
 	}
 	cum := ag.Cost()
 	_ = sess.AppendUsage(cum, cum)
+}
+
+func argsForStdin(rawArgs []string, mode os.FileMode) []string {
+	if mode&os.ModeCharDevice != 0 {
+		return rawArgs
+	}
+	return append([]string{"--print"}, rawArgs...)
 }
 
 func combinePromptInput(stdin, positional string) string {

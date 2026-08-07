@@ -201,6 +201,7 @@ The first time you launch a newer zot binary, the TUI shows the GitHub release n
 zot                              # interactive tui
 zot "fix the failing test"       # tui, pre-filled prompt
 zot -p "list all go files"       # print final text, exit
+echo "list all go files" | zot   # piped stdin implies print mode
 cat README.md | zot -p "summarize this text" # combine stdin with the prompt
 zot -p --stats stats.json "task" # print final text and write generation stats
 zot --json "refactor main.go"    # newline-delimited json events, exit
@@ -253,7 +254,7 @@ When the sandbox is on (see `/jail`), all four tools refuse paths outside the se
 - **Interactive** (default): chat TUI with streaming output, spinner, cost meter, slash commands.
 - **Print**: `zot -p "prompt"` runs the agent to completion and writes only the final assistant text to stdout.
 - **Stream**: `zot --stream "prompt"` runs without the TUI and writes assistant text to stdout as it arrives. Tool activity goes to stderr.
-- **Piped input**: print, stream, and JSON modes prepend piped stdin to the positional prompt, separated by a newline. For example, `cat README.md | zot -p "summarize this text"`.
+- **Piped input**: when no mode is specified, piped stdin selects print mode. Print, stream, and JSON modes prepend piped stdin to the positional prompt, separated by a newline. For example, `echo "list all go files" | zot` or `cat README.md | zot -p "summarize this text"`.
 - **JSON**: `zot --json "prompt"` emits one JSON object per agent event to stdout, newline-delimited. The schema is documented in [docs/rpc.md](docs/rpc.md).
 - **RPC**: `zot rpc` runs as a long-lived child process; commands in on stdin, events and responses out on stdout, both as NDJSON. Designed for embedding zot in third-party apps written in any language. See [docs/rpc.md](docs/rpc.md) for the wire schema and `examples/rpc/{python,node,shell,go}` for working clients.
 

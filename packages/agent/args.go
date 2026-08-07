@@ -394,6 +394,7 @@ func PrintHelp(version string) {
 		row{"zot", "interactive tui"},
 		row{"zot \"prompt\"", "interactive, pre-filled prompt"},
 		row{"zot -p \"prompt\"", "print final text, exit"},
+		row{"echo \"prompt\" | zot", "piped stdin implies print mode"},
 		row{"zot --stream \"prompt\"", "stream assistant text live, exit"},
 		row{"zot --json \"prompt\"", "newline-delimited json events, exit"},
 		row{"zot rpc", "json-rpc loop on stdin/stdout (see docs/rpc.md)"},

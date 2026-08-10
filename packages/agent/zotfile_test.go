@@ -223,6 +223,14 @@ func TestCheckZotfileMinVersion(t *testing.T) {
 	if err := checkZotfileRequirements(zf, "0.3.0"); err != nil {
 		t.Fatalf("minimum version rejected: %v", err)
 	}
+	if err := checkZotfileRequirements(zf, "not-a-version"); err == nil {
+		t.Fatal("invalid zot version accepted")
+	}
+
+	zf.Manifest.Runtime.MinZot = "not-a-version"
+	if err := checkZotfileRequirements(zf, "0.3.0"); err == nil {
+		t.Fatal("invalid min_zot requirement accepted")
+	}
 }
 
 func TestApplyZotfileModelRequirementsRejectsUnsupportedFields(t *testing.T) {

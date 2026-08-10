@@ -122,14 +122,22 @@ func buildInfo(current, latest, url string) UpdateInfo {
 }
 
 // versionLess reports whether a is an older semantic version than b.
-// Invalid versions fail closed so the updater never offers a downgrade.
+// Invalid versions return false so update checks never offer a downgrade.
 func versionLess(a, b string) bool {
+	comparison, err := compareVersions(a, b)
+	return err == nil && comparison < 0
+}
+
+func compareVersions(a, b string) (int, error) {
 	a = normalizedVersion(a)
 	b = normalizedVersion(b)
-	if !semver.IsValid(a) || !semver.IsValid(b) {
-		return false
+	if !semver.IsValid(a) {
+		return 0, fmt.Errorf("invalid semantic version %q", strings.TrimPrefix(a, "v"))
 	}
-	return semver.Compare(a, b) < 0
+	if !semver.IsValid(b) {
+		return 0, fmt.Errorf("invalid semantic version %q", strings.TrimPrefix(b, "v"))
+	}
+	return semver.Compare(a, b), nil
 }
 
 func normalizedVersion(v string) string {

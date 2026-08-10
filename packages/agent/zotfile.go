@@ -752,7 +752,11 @@ func checkZotfileRequirements(zf zotfileLoaded, version string) error {
 		if versionOnly(version) == "0.0.0" {
 			return fmt.Errorf("agent requires zot %s or newer; unversioned development builds cannot satisfy min_zot", min)
 		}
-		if versionLess(version, min) {
+		comparison, err := compareVersions(version, min)
+		if err != nil {
+			return fmt.Errorf("validate min_zot requirement: %w", err)
+		}
+		if comparison < 0 {
 			return fmt.Errorf("agent requires zot %s or newer; running %s", min, versionOnly(version))
 		}
 	}
